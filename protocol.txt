@@ -1,0 +1,46 @@
+const cat:Function;
+protocol keyexchange(A,B)
+{
+role A
+{
+fresh N1:Nonce; 
+const T1,T2,T3,Kab;
+var N2:Nonce; 
+macro M1 = {N1}pk(B);
+macro M3= {{N2,Kab}sk(A)}pk(B);
+ 
+send_1(A,B,cat(M1,T1));
+recv_2(B,A,cat({N1,N2}pk(A),T2));
+send_3(A,B,cat(M3,T3));
+ 
+ 
+claim_A1(A,Secret,(N1)); 
+claim_A2(A,Secret,(sk(A)));
+claim_A3(A,Niagree);
+claim_A4(A,Nisynch);
+claim_A5(A,Secret,(Kab));
+claim_A6(A,Weakagree);
+claim_A7(A,Alive);
+ }
+ 
+role B
+ {
+fresh N2:Nonce;
+const T1,T2,T3,Kab;
+var N1:Nonce; 
+macro M2 = {N1,N2}pk(A);
+ 
+recv_1(A,B,cat({N1}pk(B),T1));
+send_2(B,A,cat(M2,T2));
+recv_3(A,B,cat({{N2,Kab}sk(A)}pk(B),T3));
+ 
+ 
+claim_B1(B,Secret,(N2)); 
+claim_B2(B,Secret,(sk(B)));
+claim_B3(B,Niagree);
+claim_B4(B,Nisynch);
+claim_B5(B,Secret,(Kab));
+claim_B6(B,Weakagree);
+claim_B7(B,Alive);
+}
+}
